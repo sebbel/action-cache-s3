@@ -5,7 +5,7 @@ import AWS from 'aws-sdk'
 import {CacheResult} from './contracts'
 import {Inputs, State, CacheFileName} from './constants'
 import {exec} from '@actions/exec'
-import {readFileSync} from 'graceful-fs'
+import {readFileSync, writeFileSync} from 'graceful-fs'
 
 async function run(): Promise<void> {
   try {
@@ -23,10 +23,19 @@ async function run(): Promise<void> {
     const archivePath = path.join(archiveFolder, CacheFileName)
     core.debug(`Archive Path: ${archivePath}`)
 
-    const cachePath = core.getInput(Inputs.Path, {required: true})
+    const cachePath = utils.getInputAsArray(Inputs.Path)
+    const manifestFilename = 'manifest.txt'
+    const sourceDirectories = await utils.resolvePaths(cachePath)
+
+    utils.logWarnings(sourceDirectories.join(","))
+    
+    writeFileSync(
+      path.join(archiveFolder, manifestFilename),
+      sourceDirectories.join('\n')
+    )
 
     try {
-      await exec(`tar -zcf ${archivePath} ${cachePath}`)
+      await exec(`tar -zcf ${archivePath} --files-from manifest.txt`)
     } catch (error) {
       throw new Error(`Tar failed: ${error?.message}`)
     }
