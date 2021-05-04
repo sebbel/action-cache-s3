@@ -1,7 +1,8 @@
 export enum Inputs {
   Bucket = 'bucket',
   Key = 'key',
-  Path = 'path'
+  Path = 'path',
+  SkipSave = 'skip_save'
 }
 
 export enum Outputs {

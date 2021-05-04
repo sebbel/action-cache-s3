@@ -8,6 +8,10 @@ import {exec} from '@actions/exec'
 import {readFileSync, writeFileSync} from 'graceful-fs'
 
 async function run(): Promise<void> {
+  if (core.getInput(Inputs.SkipSave) === 'true') {
+    core.info('Skipping Cache save.')
+    return 
+  }
   try {
     const stateData = core.getState(State.CacheResult)
     core.debug(`State: ${stateData}`)

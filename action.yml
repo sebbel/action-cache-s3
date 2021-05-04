@@ -8,6 +8,8 @@ inputs:
     required: true
   path:
     required: true
+  skip_save:
+    default: false
 outputs:
   cache-hit:
     description: 'A boolean value to indicate an exact match was found for the key'

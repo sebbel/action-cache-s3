@@ -22,5 +22,7 @@ jobs:
       with:
         bucket: cache-s3-test-bucket
         key: node_modules-${{ hashFiles('package.json') }}
-        path: node_modules
+        path: | 
+          node_modules
+          packages/*/node_modules
 ```
