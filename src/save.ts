@@ -26,16 +26,16 @@ async function run(): Promise<void> {
     const cachePath = utils.getInputAsArray(Inputs.Path)
     const manifestFilename = 'manifest.txt'
     const sourceDirectories = await utils.resolvePaths(cachePath)
-
+    const manifestPath = path.join(archiveFolder, manifestFilename)
     utils.logWarnings(sourceDirectories.join(","))
     
     writeFileSync(
-      path.join(archiveFolder, manifestFilename),
+      manifestPath,
       sourceDirectories.join('\n')
     )
 
     try {
-      await exec(`tar -zcf ${archivePath} --files-from manifest.txt`)
+      await exec(`tar -zcf ${archivePath} --files-from ${manifestPath}`)
     } catch (error) {
       throw new Error(`Tar failed: ${error?.message}`)
     }
